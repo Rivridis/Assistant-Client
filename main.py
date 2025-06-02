@@ -1,6 +1,6 @@
 import sys
 from pathlib import Path
-from PySide6.QtCore import QObject, Slot, Signal, QThread, QMetaObject, Qt, Q_ARG
+from PySide6.QtCore import QObject, Slot, Signal, QThread, QMetaObject, Qt, Q_ARG, QUrl
 from PySide6.QtGui import QGuiApplication, QIcon
 from PySide6.QtQml import QQmlApplicationEngine, QmlElement
 from PySide6.QtQuickControls2 import QQuickStyle
@@ -8,6 +8,7 @@ from pdf_mode import PDFChatAssistant
 from model import AssistantModel
 from openai import OpenAI
 from code_mode import Code
+from PySide6.QtWidgets import QMessageBox, QApplication
 
 assistant = PDFChatAssistant()
 models = AssistantModel()
@@ -20,7 +21,7 @@ try:
     print("Successfully connected to the LLM server.")
 except Exception as conn_exc:
     print(f"Failed to connect to the LLM server: {conn_exc}")
-    raise
+    llm = None
 
 
 
@@ -99,6 +100,14 @@ class Backend(QObject):
 
 
 if __name__ == "__main__":
+    if llm is None:
+        app = QApplication(sys.argv)
+        msg_box = QMessageBox()
+        msg_box.setIcon(QMessageBox.Critical)
+        msg_box.setWindowTitle("Connection Error")
+        msg_box.setText("LLM server is not connected.\nPlease point the server to http://127.0.0.1:1234.")
+        msg_box.exec()
+        sys.exit(1)
     app = QGuiApplication(sys.argv)
     QQuickStyle.setStyle("FluentWinUI3")
     engine = QQmlApplicationEngine()
