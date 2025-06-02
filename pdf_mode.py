@@ -1,5 +1,4 @@
 from qdrant_client import QdrantClient
-from model import llm
 from pathlib import Path
 from pypdf import PdfReader
 from urllib.parse import urlparse, unquote
@@ -48,26 +47,30 @@ class PDFChatAssistant:
             text = page.extract_text()
             pglst.append(text)
         
+        print(pglst)
+        
         self.client_pdf.add(
-                collection_name=str(self.fl),
+                collection_name="Myfile",
                 documents=pglst,
-                ids=[f"{i}" for i in range(len(pglst))]
+                ids=[i for i in range(1,len(pglst)+1)]
             )
 
-    def process_chat(self, text, url):
-        if llm == None:
-            return("Model not loaded. Please place your model in the 'model' directory and restart the app.")
+    def process_chat(self, text, url, llm):
         if self.filepath == "":
             self.filepath = self.parse_file_url(url)
             self.load_pdf(self.filepath)
         results = self.client_pdf.query(
-            collection_name=str(self.fl),
-            query_texts=text,
+            collection_name="Myfile",
+            query_text=text,
+            limit = 2,
         )
         print(results)
 
-        content = results[0].metadata['document'] + results[1].metadata['document']
-        ids = results[0].id + "\n" + results[1].id
+        content = ""
+        ids = []
+        for result in results:
+            content += result.metadata['document']
+            ids.append(str(result.id))
 
         self.message[1]["content"] = text
         self.message[0]["content"] += "Context:" + "\n" + str(content) + "\nPage Numbers:\n" + str(ids)
@@ -79,18 +82,17 @@ class PDFChatAssistant:
             # Truncate chat_history to keep the most recent part, but keep main_instructions intact
             truncated_history = chat_history[-(max_length - len(main_instructions)):]
             self.message[0]["content"] = main_instructions + "MAIN" + truncated_history
-
-        response = llm.create_chat_completion(
-        model ='gpt-4',
-        messages= self.message,
-        temperature=0.7,
-    )
+        
+        response = llm.chat.completions.create(
+            model ='gpt-4o-mini',
+            messages= self.message,
+        )
         
         self.message[0]["content"] += "Chat Memory:\n"
-        self.message[0]["content"] += "User: " + text
-        self.message[0]["content"] += "Assistant: " + str(response["choices"][0]["message"]["content"])
+        self.message[0]["content"] += "User: " + text + "\n"
+        self.message[0]["content"] += "Assistant: " + str(response.choices[0].message.content) + "\n"
 
-        return(str(response["choices"][0]["message"]["content"]))
+        return(str(response.choices[0].message.content))
 
 
 

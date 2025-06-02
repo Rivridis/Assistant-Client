@@ -4,11 +4,25 @@ from PySide6.QtCore import QObject, Slot, Signal, QThread, QMetaObject, Qt, Q_AR
 from PySide6.QtGui import QGuiApplication, QIcon
 from PySide6.QtQml import QQmlApplicationEngine, QmlElement
 from PySide6.QtQuickControls2 import QQuickStyle
-import model, code_mode
 from pdf_mode import PDFChatAssistant
-import os
+from model import AssistantModel
+from openai import OpenAI
+from code_mode import Code
+
 assistant = PDFChatAssistant()
-os.environ["OPENTELEMETRY_PYTHON_CONTEXT"] = "contextvars"
+models = AssistantModel()
+coding = Code()
+
+try:
+    llm = OpenAI(base_url="http://127.0.0.1:1234/v1", api_key="sk-xxx")
+    # Test connection by listing models
+    llm.models.list()
+    print("Successfully connected to the LLM server.")
+except Exception as conn_exc:
+    print(f"Failed to connect to the LLM server: {conn_exc}")
+    raise
+
+
 
 QML_IMPORT_NAME = "mymodule"
 QML_IMPORT_MAJOR_VERSION = 1
@@ -18,22 +32,21 @@ class Worker(QObject):
 
     @Slot(str)
     def process(self, text):
-        result = model.process_chat(text)
+        result = models.process_chat(text,llm)
         self.resultReady.emit(result)
         self.finished.emit()
 
     @Slot(str, str)
     def code(self, text, code):
         print(text)
-        print("me")
-        result = code_mode.process_chat(text, code)
+        result = coding.process_chat(text, code,llm)
         self.resultReady.emit(result)
         self.finished.emit()
 
     @Slot(str, str)
     def pdf(self, text, url):
         print(text)
-        result = assistant.process_chat(text, url)
+        result = assistant.process_chat(text, url,llm)
         self.resultReady.emit(result)
         self.finished.emit()
 
