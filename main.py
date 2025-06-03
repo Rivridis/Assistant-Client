@@ -1,6 +1,7 @@
+from json import load
 import sys
 from pathlib import Path
-from PySide6.QtCore import QObject, Slot, Signal, QThread, QMetaObject, Qt, Q_ARG, QUrl
+from PySide6.QtCore import QObject, Slot, Signal, QThread, QMetaObject, Qt, Q_ARG
 from PySide6.QtGui import QGuiApplication, QIcon
 from PySide6.QtQml import QQmlApplicationEngine, QmlElement
 from PySide6.QtQuickControls2 import QQuickStyle
@@ -14,14 +15,17 @@ assistant = PDFChatAssistant()
 models = AssistantModel()
 coding = Code()
 
-try:
-    llm = OpenAI(base_url="http://127.0.0.1:1234/v1", api_key="sk-xxx")
-    # Test connection by listing models
-    llm.models.list()
-    print("Successfully connected to the LLM server.")
-except Exception as conn_exc:
-    print(f"Failed to connect to the LLM server: {conn_exc}")
-    llm = None
+def load_model(host = "127.0.0.1", port = "5001"):
+    try:
+        url = "http://" + host + ":" + port + "/v1"
+        llm = OpenAI(base_url= url, api_key="sk-xxx")
+        # Test connection by listing models
+        llm.models.list()
+        print("Successfully connected to the LLM server.")
+    except Exception as conn_exc:
+        print(f"Failed to connect to the LLM server: {conn_exc}")
+        llm = None
+    return llm
 
 
 
@@ -33,21 +37,30 @@ class Worker(QObject):
 
     @Slot(str)
     def process(self, text):
-        result = models.process_chat(text,llm)
+        try:
+            result = models.process_chat(text, llm)
+        except Exception as exc:
+            result = f"Error: Lost connection to the LLM server. Details: {exc}"
         self.resultReady.emit(result)
         self.finished.emit()
 
     @Slot(str, str)
     def code(self, text, code):
         print(text)
-        result = coding.process_chat(text, code,llm)
+        try:
+            result = coding.process_chat(text, code, llm)
+        except Exception as exc:
+            result = f"Error: Lost connection to the LLM server. Details: {exc}"
         self.resultReady.emit(result)
         self.finished.emit()
 
     @Slot(str, str)
     def pdf(self, text, url):
         print(text)
-        result = assistant.process_chat(text, url,llm)
+        try:
+            result = assistant.process_chat(text, url, llm)
+        except Exception as exc:
+            result = f"Error: Lost connection to the LLM server. Details: {exc}"
         self.resultReady.emit(result)
         self.finished.emit()
 
@@ -100,12 +113,13 @@ class Backend(QObject):
 
 
 if __name__ == "__main__":
+    llm = load_model()
     if llm is None:
         app = QApplication(sys.argv)
         msg_box = QMessageBox()
         msg_box.setIcon(QMessageBox.Critical)
         msg_box.setWindowTitle("Connection Error")
-        msg_box.setText("LLM server is not connected.\nPlease point the server to http://127.0.0.1:1234.")
+        msg_box.setText("LLM server is not connected. \n Please launch the server and try again.")
         msg_box.exec()
         sys.exit(1)
     app = QGuiApplication(sys.argv)

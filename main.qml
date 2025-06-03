@@ -197,7 +197,7 @@ ApplicationWindow {
                 spacing: 10
 
                 Label {
-                    text: "Vivy - AI Assistant"
+                    text: "AI Assistant"
                     color: "#bbb"
                     font.pointSize: 18
                     font.bold: true
