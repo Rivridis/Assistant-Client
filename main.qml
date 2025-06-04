@@ -210,16 +210,15 @@ ApplicationWindow {
                     ListElement { sender: "AI"; message: "Hello, This is Vivy, how can I help you today?" }
                 }
 
-                // Clear chatModel when switching from Code to Chat mode
-                Connections {
-                    target: window
-                    function onSelectedModeChanged() {
-                        if (selectedMode === "Chat") {
-                            chatModel.clear()
-                            chatModel.append({ sender: "AI", message: "Hello, This is Vivy, how can I help you today?" })
-                        }
+                Component.onCompleted: {
+                    const messages = backend.load_chat()
+                    for (var i = 0; i < messages.length; ++i) {
+                    chatModel.append(messages[i])
                     }
                 }
+
+                // Clear chatModel when switching from Code to Chat mode
+
 
                 Rectangle {
                     Layout.fillWidth: true

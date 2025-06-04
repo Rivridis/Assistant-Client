@@ -42,6 +42,35 @@ def load_model(host = config['host'], port = config['port']):
         llm = None
     return llm
 
+def load_text_file(filepath="memory.txt"):
+    chat_data = []
+    user_msg = None
+    assistant_msg = None
+
+    try:
+        with open(filepath, "r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if line.startswith("User Message:"):
+                    user_msg = line[len("User Message:"):].strip()
+                elif line.startswith("Assistant Response:"):
+                    assistant_msg = line[len("Assistant Response:"):].strip()
+
+                # Once we have a pair, append both and reset
+                if user_msg is not None and assistant_msg is not None:
+                    chat_data.append({"sender": "User", "message": user_msg})
+                    chat_data.append({"sender": "AI", "message": assistant_msg})
+                    user_msg = None
+                    assistant_msg = None
+
+    except FileNotFoundError:
+        print(f"File {filepath} not found.")
+    except Exception as e:
+        print(f"Error reading memory file: {e}")
+
+    print(chat_data)
+    return chat_data
+
 
 
 QML_IMPORT_NAME = "mymodule"
@@ -125,6 +154,10 @@ class Backend(QObject):
     def handle_result(self, output):
         print(f"[Backend] Result: {output}")
         self.resultReady.emit(output)
+
+    @Slot(result='QVariant')
+    def load_chat(self):
+        return load_text_file()
 
 def main_screen():
     qml_file = Path(__file__).resolve().parent / "main.qml"
