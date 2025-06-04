@@ -9,7 +9,6 @@ from pdf_mode import PDFChatAssistant
 from model import AssistantModel
 from openai import OpenAI
 from code_mode import Code
-from PySide6.QtWidgets import QMessageBox, QApplication
 
 assistant = PDFChatAssistant()
 models = AssistantModel()

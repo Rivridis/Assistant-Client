@@ -24,7 +24,8 @@ class AssistantModel:
             ids=self.ids
         )
 
-        self.chat_memory = ""
+        with open("memory.txt", "r") as f:
+            self.chat_memory = f.read()
 
     def process_chat(self,text,llm):
         print(text)
@@ -92,7 +93,8 @@ class AssistantModel:
             self.chat_memory += " Assistant Response:" + summary + "\n"
             if len(self.chat_memory) > 5000:
                 self.chat_memory = self.chat_memory[-5000:]
-            
+            with open("memory.txt", "w") as f:
+                f.write(self.chat_memory)
             return(summary)
 
         if  func.get("function_called") == "music":
@@ -142,4 +144,7 @@ class AssistantModel:
         if len(self.chat_memory) > 5000:
                 self.chat_memory = self.chat_memory[-5000:]
         print(self.chat_memory)
+
+        with open("memory.txt", "w") as f:
+            f.write(self.chat_memory)
         return(out)
