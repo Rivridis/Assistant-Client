@@ -14,8 +14,10 @@ from PySide6.QtWidgets import QMessageBox, QApplication
 assistant = PDFChatAssistant()
 models = AssistantModel()
 coding = Code()
+llm = None
 
 def load_model(host = "127.0.0.1", port = "5001"):
+    global llm
     try:
         url = "http://" + host + ":" + port + "/v1"
         llm = OpenAI(base_url= url, api_key="sk-xxx")
@@ -111,25 +113,46 @@ class Backend(QObject):
         print(f"[Backend] Result: {output}")
         self.resultReady.emit(output)
 
+def main_screen():
+    qml_file = Path(__file__).resolve().parent / "main.qml"
+    engine.load(qml_file)
+
+def button_press(host, port):
+    global llm
+    try:
+        llm = load_model(host, port)
+    except Exception as e:
+        print(f"Error loading model: {e}")
+        llm = None
+    if llm is not None:
+        root.close()
+        main_screen()
+   
+
 
 if __name__ == "__main__":
-    llm = load_model()
-    if llm is None:
-        app = QApplication(sys.argv)
-        msg_box = QMessageBox()
-        msg_box.setIcon(QMessageBox.Critical)
-        msg_box.setWindowTitle("Connection Error")
-        msg_box.setText("LLM server is not connected. \n Please launch the server and try again.")
-        msg_box.exec()
-        sys.exit(1)
+    
     app = QGuiApplication(sys.argv)
     QQuickStyle.setStyle("FluentWinUI3")
     engine = QQmlApplicationEngine()
     app_icon = QIcon("app_icon.ico")
     QGuiApplication.setWindowIcon(app_icon)
-    qml_file = Path(__file__).resolve().parent / "main.qml"
-    engine.load(qml_file)
+
+    llm = load_model()
+    if llm is None:
+        qml_file = Path(__file__).resolve().parent / "port.qml"
+        engine.load(qml_file)
+
+        root = engine.rootObjects()[0]
+        root.sendToPython.connect(button_press)
+
+    else:
+        qml_file = Path(__file__).resolve().parent / "main.qml"
+        engine.load(qml_file)
+
     if not engine.rootObjects():
-        sys.exit(-1)
+            sys.exit(-1)
     sys.exit(app.exec())
+
+
 
