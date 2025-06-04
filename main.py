@@ -1,4 +1,4 @@
-from json import load
+import json
 import sys
 from pathlib import Path
 from PySide6.QtCore import QObject, Slot, Signal, QThread, QMetaObject, Qt, Q_ARG
@@ -16,7 +16,17 @@ models = AssistantModel()
 coding = Code()
 llm = None
 
-def load_model(host = "127.0.0.1", port = "5001"):
+# json file that contains host and port information
+try:
+    with open('api.json', 'r') as fp:
+        config = json.load(fp)
+
+except IOError:
+    config = {'host':'127.0.0.1', 'port':'5001'}
+    with open('api.json', 'w') as fp:
+        json.dump(config, fp)
+
+def load_model(host = config['host'], port = config['port']):
     global llm
     try:
         url = "http://" + host + ":" + port + "/v1"
@@ -24,6 +34,10 @@ def load_model(host = "127.0.0.1", port = "5001"):
         # Test connection by listing models
         llm.models.list()
         print("Successfully connected to the LLM server.")
+        config['host'] = str(host)
+        config['port'] = str(port)
+        with open('api.json', 'w') as fp:
+            json.dump(config, fp)
     except Exception as conn_exc:
         print(f"Failed to connect to the LLM server: {conn_exc}")
         llm = None
