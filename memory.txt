@@ -1,6 +1,0 @@
- User Message:test
- Assistant Response:I'm sorry, it seems like there was no function call provided. Could you please provide me with the function result, so I can assist you better?
- User Message:test 2
- Assistant Response:I'm sorry, it seems like there was no function call provided. Could you please provide me with the function result, so I can assist you better?
- User Message:what is your name?
- Assistant Response:My name is Vivy, and I am here to assist you with the information provided in the function call. If you have any questions or need help, please feel free to ask.

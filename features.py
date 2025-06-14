@@ -32,11 +32,12 @@ def read_website(url):
     """
     headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36'}
     response = requests.get(url, headers=headers)
+    response.encoding = 'utf-8'  # Ensure the response is decoded as UTF-8
     if response.status_code == 200:
         soup = BeautifulSoup(response.text, 'html.parser')
         body = soup.body
         body_text = body.get_text(strip=True)
-        return body_text        
+        return body_text   
     else:
         print(f"Failed to fetch {url}: {response.status_code}")
         return None
