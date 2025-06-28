@@ -1,4 +1,3 @@
-//qmllint disable
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 
@@ -51,7 +50,7 @@ ApplicationWindow {
                 enabled: hostField.text.length > 0 && portField.text.length > 0
                 onClicked: {
                     console.log("Host:", settingsPage.host, "Port:", settingsPage.port)
-                    sendToPython(settingsPage.host, settingsPage.port)
+                    settingsPage.sendToPython(settingsPage.host, settingsPage.port)
                 }
             }
             Rectangle {

@@ -1,12 +1,11 @@
-// qmllint disable
+//qmllint disable
+
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Window
 import QtQuick.Dialogs
 import mymodule
-
-
 
 ApplicationWindow {
     id: window
