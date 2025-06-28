@@ -9,6 +9,7 @@ from pdf_mode import PDFChatAssistant
 from model import AssistantModel
 from openai import OpenAI
 from code_mode import Code
+from PySide6.QtQuick import QQuickWindow, QQuickView
 
 assistant = PDFChatAssistant()
 models = AssistantModel()
@@ -184,7 +185,22 @@ if __name__ == "__main__":
     app_icon = QIcon("app_icon.ico")
     QGuiApplication.setWindowIcon(app_icon)
 
+
+    splash_qml = Path(__file__).resolve().parent / "splash.qml"
+    splash_view = QQuickView()
+    splash_view.setFlags(splash_view.flags() | Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint)
+    splash_view.setSource(splash_qml.as_uri())
+    splash_view.setColor(Qt.transparent)
+    splash_view.setModality(Qt.ApplicationModal)
+    splash_view.setResizeMode(QQuickView.SizeRootObjectToView)
+    
+    splash_view.setFlag(Qt.WindowTransparentForInput, True)
+    splash_view.show()
+    app.processEvents() 
+
     llm = load_model()
+    splash_view.close()
+    
     if llm is None:
         qml_file = Path(__file__).resolve().parent / "port.qml"
         engine.load(qml_file)
