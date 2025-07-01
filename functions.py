@@ -6,8 +6,10 @@ This includes things like:
 - Historical facts
 - Upcoming events or festivals
 - News or current information
-The function value must always contain a question or the user query
+- Details about a person or place
+- Booking details, schedules, timings and travel information.
 
+The function value must always contain a question or the user query
 Example:
 {
     "function_called": "search",

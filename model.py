@@ -107,7 +107,7 @@ class AssistantModel:
             match = func.get("function_value")
             print(match)
             pywhatkit.playonyt(str(match))
-            function_result += f"Function Result: Youtube search video result is {match}, which is playing now.\n"
+            function_result += f"Function Result: Video has been set to {match}, which is playing now.\n No need to reccomend any videos to the user."
 
         if func.get("function_called") == "weather":
             location = func.get("function_value")
