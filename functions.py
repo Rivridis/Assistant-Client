@@ -1,6 +1,6 @@
 search_function = """Search Function
 Takes in a query string and returns search results.
-Use this when the user asks factual, date-based, or real-time questions.
+Use this when the user asks factual, date-based, or real-time questions, or if the user asks you to retrieve information.
 This includes things like:
 - Birthdays
 - Historical facts
@@ -9,7 +9,7 @@ This includes things like:
 - Details about a person or place
 - Booking details, schedules, timings and travel information.
 
-The function value must always contain a question or the user query
+The function value must contain a question or the user's query converted into a search query that passed to the search engine.
 Example:
 {
     "function_called": "search",

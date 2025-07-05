@@ -35,11 +35,11 @@ message_main = [
 message_google = [
         {
             "role": "system",
-            "content": """You are an AI assistant that goes through the given list of url, title, and description of the website, and returns the index of the most relevant website to the user query that is given below, which is a value from [0 to 5] ONLY
+            "content": """You are an AI assistant that goes through the given list of url, title, and description of the website, and returns the index of the most relevant website to the user query that is given below. The value depends on the number of urls provided in the function value, and the number starts from 0.
             EXAMPLE
             System: How far is Jupiter from the moon?
             User:
-            [{'url': 'https://en.wikipedia.org/wiki/Jupiter', 'title': 'Jupiter - Wikipedia', 'description': 'No description found'}, {'url': 'https://theskylive.com/how-far-is-jupiter', 'title': 'How Far Away Is Jupiter?', 'description': 'Precise distance of Jupiter from Earth'}]
+            [{'url': 'https://en.wikipedia.org/wiki/Jupiter', 'title': 'Jupiter - Wikipedia', 'description': 'No description found'}, {'url': 'https://theskylive.com/how-far-is-jupiter', 'title': 'How Far Away Is Jupiter?', 'description': 'Precise distance of Jupiter from Moon'}]
             
             Assistant: 1.
             """,
@@ -84,7 +84,11 @@ response_google = {
 message_summary = [
         {
             "role": "system",
-            "content": """You are an AI assistant that scans through the given large wall of google search results, and answers the user query using the information from the search results.
+            "content": """You are an AI assistant that scans through the given large wall of google search results, and answers the user query using the information from the search results. Provide the url of the website you are using to answer the user query in the response. If you are not able to find any relevant information, let the user know that you are not able to find any relevant information. Do not make up your own information, and do not use the information from the search results that is not relevant to the user query.
+            REPLY FORMAT
+            Assistant:
+            <your response / website content here>
+            URL: given website url 
             """,
         },
         {"role": "user", "content": ""},

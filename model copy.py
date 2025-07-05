@@ -36,7 +36,7 @@ class AssistantModel:
         query_text=inp,
         )
 
-        content = results[0].metadata['document'] + results[1].metadata['document']
+        content = results[0].metadata['document']
         print(content)
 
         message_main[0]["content"] =  message_main[0]["content"].split("MAIN")[0]
