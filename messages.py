@@ -63,7 +63,7 @@ response_format = {
           "type": "string"
         }
       },
-      "required": ["function_called"],
+      "required": ["function_called", "function_value"],
       "additionalProperties": False
     },
     "strict": True
