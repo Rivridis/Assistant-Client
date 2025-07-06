@@ -1,8 +1,9 @@
+import textwrap
 from qdrant_client import QdrantClient
 from functions import flist
 import features
 from functions import *
-from messages import message, message_main, response_format, response_google, message_google, message_summary
+from messages import message, message_main, response_format, response_google, message_google, message_summary, response_format_new
 import pywhatkit
 
 
@@ -56,7 +57,8 @@ class AssistantModel:
             response_format= response_format,
         )
 
-        func = eval(response.choices[0].message.content)
+        dedented_string = textwrap.dedent(response.choices[0].message.content)
+        func = eval(dedented_string)
         print(func)
         # Extract and print the JSON response
 

@@ -69,6 +69,26 @@ response_format = {
     "strict": True
   }
 }
+
+response_format_new = {
+  "type": "json_schema",
+  "json_schema": {
+    "name": "output_format",
+    "schema": {
+      "type": "object",
+      "properties": {
+        "function_called": {
+          "type": "string",
+          "enum": ["music", "weather", "none", "search", "youtube"]
+        }
+      },
+      "required": ["function_called"],
+      "additionalProperties": False
+    },
+    "strict": True
+  }
+}
+
 response_google = {
   "type": "json_schema",
   "json_schema": {

@@ -1,2 +1,0 @@
- User Message:book me a flight
- Assistant Response:I am unable to find any relevant information regarding booking a flight for you. Please provide more specific details like preferred dates, departure and arrival locations, and the number of passengers to help me assist you better.
