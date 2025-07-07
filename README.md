@@ -1,5 +1,5 @@
-# LLM-Assistant
-OpenAI compatible LLM Assistant
+# Rivridis Assistant
+OpenAI compatible LLM Assistant. Server is not provided, so please host your models using KoboldCPP or similar.
 
 ## Features
 * Works with any instruct-finetuned LLM
@@ -21,7 +21,8 @@ OpenAI compatible LLM Assistant
 
 ## Setup
 ### Setup on Windows 10/11
-* Install exe from latest distribution
+* Clone repository
+* Install requirements.txt
 
 ### Usage
 * Use Assistant mode for general chat, and calling functions to execute like playing music.
