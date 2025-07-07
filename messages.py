@@ -4,14 +4,8 @@ message = [
             "content": """You are a helpful function calling AI that outputs in JSON format. Do not reply to the user's questions. Details about how to use functions are given below. Strictly follow that. Your previous response is given below. Use that to call the correct function.
             
             Function Descriptions:
-            None Function
-            Used when user is just chatting with the assistant, or the asisistant needs more information from the user. Leave the function value empty.
-            {
-                "function_called": "none",     
-                "function_value": ""
-            }
             MAIN
-            """ ,
+            """,
         },
         {"role": "user", "content": ""},
     ]
@@ -19,11 +13,12 @@ message = [
 message_main = [
         {
             "role": "system",
-            "content": """Your name is Vivy, an assistant  who responds to the the user's questions, using the value provided by the function call. Always follow the values provided in the function result below, and don't make up your own values. If there is any mistake in the provided function result and the user question, let the user know the call failed. Use the function result to chat with the user.
-            You are provided with the chat memory of the conversation. Use it to answer the user's questions or help the user by asking for more information.
+            "content": """Your name is Vivy, an assistant similar to Jarvis from Marvel who responds to the the user's questions. The function result that you called earlier will be provided before the user query. Always follow the values provided in the function result below, and don't make up your own values. Feel free to reccomend your opinion to the user, if the user asks you to reccomend something. \n
+            Let the user know about the function call result. If the result is not relevant to the user's query, let the user know.
+            You are provided with the chat memory of the conversation. Use it to answer the user's questions.
             EXAMPLE
-            System: The value of function call is - weather is [40 celsius, 1013 hPa, Tokyo, Japan]
-            User: Can you tell me the weather right now?
+            User: The value of function call is - weather is [40 celsius, 1013 hPa, Tokyo, Japan] \n
+            Can you tell me the weather right now?
             
             Assistant: using the provided function result, The weather right now is 40 celsius with a pressure of 1013 hPa in Tokyo, Japan. Hope you enjoy the weather!.
             MAIN
@@ -55,34 +50,45 @@ response_format = {
     "schema": {
       "type": "object",
       "properties": {
-        "function_called": {
-          "type": "string",
-          "enum": ["music", "weather", "none", "search", "youtube"]
-        },
-        "function_value": {
-          "type": "string"
+        "functions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "function_called": {
+                "type": "string",
+                "enum": ["music", "weather", "search", "youtube"]
+              },
+              "function_value": {
+                "type": "string"
+              }
+            },
+            "required": ["function_called", "function_value"],
+            "additionalProperties": False
+          },
+          "minItems": 1
         }
       },
-      "required": ["function_called", "function_value"],
+      "required": ["functions"],
       "additionalProperties": False
     },
     "strict": True
   }
 }
 
-response_format_new = {
+intent_format = {
   "type": "json_schema",
   "json_schema": {
     "name": "output_format",
     "schema": {
       "type": "object",
       "properties": {
-        "function_called": {
+        "intent": {
           "type": "string",
-          "enum": ["music", "weather", "none", "search", "youtube"]
+          "enum": ["tool_call", "clarify", "chat"]
         }
       },
-      "required": ["function_called"],
+      "required": ["intent"],
       "additionalProperties": False
     },
     "strict": True
@@ -104,11 +110,7 @@ response_google = {
 message_summary = [
         {
             "role": "system",
-            "content": """You are an AI assistant that scans through the given large wall of google search results, and answers the user query using the information from the search results. Provide the url of the website you are using to answer the user query in the response. If you are not able to find any relevant information, let the user know that you are not able to find any relevant information. Do not make up your own information, and do not use the information from the search results that is not relevant to the user query.
-            REPLY FORMAT
-            Assistant:
-            <your response / website content here>
-            URL: given website url 
+            "content": """You are an AI assistant that scans through the given large wall of google search results, and answers the user query using the information from the search results. If you are not able to find any relevant information, let the user know that you are not able to find any relevant information. Do not make up your own information, and do not use the information from the search results that is not relevant to the user query.
             """,
         },
         {"role": "user", "content": ""},
