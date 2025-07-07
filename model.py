@@ -55,7 +55,7 @@ class AssistantModel:
                 Given the chat history and the latest user input, classify the intent as one of:
                 - tool_call: The user wants to use a tool/function and has provided enough details. This also used when the user has clarified the function call in chat history.
                 - clarify: When the user wants to use a tool/function but has not provided enough details to call the function properly, so clarification is needed. Used for tools calls that need more information like dates, locations, like booking/planning something, searching for something, playing something etc. Check the chat history before using this intent. \n
-                - chat: The user just wants to chat with the assistant or is asking general questions, no tool call is needed. Also used when the user is asking you to reccomend something. \n
+                - chat: The user just wants to chat with the assistant or is asking general questions, no tool call is needed. Also used when the user is asking you to reccomend something. This is also used when the user query can't be answered with these functions ie. search, youtube, music, weather.\n
                 Respond ONLY in JSON with this format: {{"intent": "tool_call|clarify|chat"}}
                 Examples:
                 User: What's the weather in Paris?
