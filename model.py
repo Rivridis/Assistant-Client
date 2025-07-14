@@ -35,6 +35,7 @@ class AssistantModel:
         results = self.client.query(
         collection_name="assistant",
         query_text=inp,
+        limit=2,
         )
 
         content = results[0].metadata['document'] + results[1].metadata['document']
