@@ -40,6 +40,7 @@ class AssistantModel:
         )
 
         content = results[0].metadata['document'] + results[1].metadata['document']
+        function_names =  self.metadata[(results[0].id)-1]['source'] + " " + self.metadata[(results[1].id)-1]['source']
         print(content)
         
         message[1]["content"] = inp
@@ -54,10 +55,11 @@ class AssistantModel:
             "role": "system",
             "content": f"""
                 You are an intent classifier for an assistant.
+                Functions Available: {function_names}
                 Given the chat history and the latest user input, classify the intent as one of:
-                - tool_call: The user wants to use a tool/function and has provided enough details. This also used when the user has clarified the function call in chat history.
+                - tool_call: The user wants to use a tool/function and has provided enough details. This also used when the user has clarified the function call in chat history. Only use this when the user query can be solved using the available functions. Use chat if the user is asking for something that cannot be done with the available functions. \n
                 - clarify: When the user wants to use a tool/function but has not provided enough details to call the function properly, so clarification is needed. Used for tools calls that need more information like dates, locations, like booking/planning something, searching for something, playing something etc. Check the chat history before using this intent. \n
-                - chat: The user just wants to chat with the assistant or is asking general questions, no tool call is needed. Also used when the user is asking you to reccomend something. This is also used when the user query can't be answered with these functions ie. search, youtube, music, weather.\n
+                - chat: The user just wants to chat with the assistant or is asking general questions, no tool call is needed. Also used when the user is asking you to reccomend something. This is also used when the user query can't be answered with the given functions.\n
                 Respond ONLY in JSON with this format: {{"intent": "tool_call|clarify|chat"}}
                 Examples:
                 User: What's the weather in Paris?
