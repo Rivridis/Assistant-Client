@@ -2,7 +2,8 @@ from httpx import get
 import requests
 from bs4 import BeautifulSoup
 from googlesearch import search
-
+import pyautogui
+import time
 
 def internet_search(query):
     """
@@ -96,3 +97,12 @@ def weather(city):
             return {"error": "Could not fetch weather data."}
     except Exception as e:
         return {"error": str(e)}
+
+def open_app(app_name: str):
+    pyautogui.press('win')
+    time.sleep(1)
+
+    pyautogui.write(app_name)
+    time.sleep(1)
+
+    pyautogui.press('enter')

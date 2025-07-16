@@ -56,5 +56,18 @@ Example:
     "function_value": "cute cat videos"
 }
 """
+app_open_function = """
+App Open Function
+Takes the name of an application in windows, and opens it for the user. This is used when the user asks to open an application on their computer.
+Use this when the user asks to open an application on their computer, like Recycle Bin, Discord, or any other installed or system application.
+Make sure the function value is the name of the application to open, and it should be a valid application name that can be opened on the user's computer.
 
-flist = [search_function, weather_function,play_functions]
+Example:
+{
+    "function_called": "app_open",
+    "function_value": "File Explorer"
+}
+
+"""
+
+flist = [search_function, weather_function,play_functions, app_open_function]

@@ -14,9 +14,10 @@ class AssistantModel:
         self.metadata = [
             {"source": "search-function"},
             {"source": "weather-function"},
-            {"source": "play-function"}
+            {"source": "play-function"},
+            {"source": "app-open-function"}
         ]
-        self.ids = [1, 2, 3]
+        self.ids = [1, 2, 3, 4]
 
         self.client.add(
             collection_name="assistant",
@@ -191,6 +192,12 @@ class AssistantModel:
                     weather_data = features.weather(location)
                     print(weather_data)
                     Final += f"Function Result: {str(weather_data)}. Show this to the user in a user readable format.\n"
+                
+                if function_called == "app_open":
+                    app_name = function_value
+                    print(app_name)
+                    features.open_app(app_name)
+                    Final += f"Function Result: The application {app_name} has been opened successfully.\n"
 
         message_main[0]["content"] =  message_main[0]["content"].split("MAIN")[0]
         message_main[0]["content"] += "\nMAIN" + "\n"

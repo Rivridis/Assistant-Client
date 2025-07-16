@@ -57,7 +57,7 @@ response_format = {
             "properties": {
               "function_called": {
                 "type": "string",
-                "enum": ["music", "weather", "search", "youtube"]
+                "enum": ["music", "weather", "search", "youtube", "app_open"]
               },
               "function_value": {
                 "type": "string"
