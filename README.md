@@ -26,7 +26,7 @@ OpenAI compatible LLM Assistant. Server is not provided, so please host your mod
 
 ### Usage
 * Use Assistant mode for general chat, and calling functions to execute like playing music.
-* Use the Code modeto access a canvas for coding and bug fixing.
+* Use the Code mode to access a canvas for coding and bug fixing.
 * Use the PDF mode to read through PDFs and answer queries.
 
 
